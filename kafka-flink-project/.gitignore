@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+# For Flake8
+.flake8
+# For MyPy
+.mypy_cache/
+.dmypy.json
+dmypy/
+# For poetry
+.venv
+
+# Java
+target/
+.gradle/
+build/
+*.jar
+*.war
+*.ear
+*.class
+
+# Flink
+flink-checkpoints/
+
+# PostgreSQL
+postgres-data/
+
+# Docker
+*.log
+*.tmp
+.dockerignore # Although it's for Docker, it might be ignored by Git sometimes
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
