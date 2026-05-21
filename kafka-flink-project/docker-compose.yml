@@ -137,13 +137,36 @@ services:
       flink run -m jobmanager:8081 -c com.flink.orderprocessor.OrderProcessor /opt/flink/usrlib/flink-order-processor.jar -d
     networks:
       - flink-network
-    volumes:
-      - flink-checkpoints:/opt/flink/flink-checkpoints
     depends_on:
       jobmanager:
         condition: service_started
       taskmanager:
         condition: service_started
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+  # PySpark Streaming Job
+  spark-job:
+    image: apache/spark:3.5.1
+    container_name: spark-job
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - POSTGRES_URL=jdbc:postgresql://postgres:5432/orders_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./spark:/app
+    command: >
+      /opt/spark/bin/spark-submit
+      --master local[*] 
+      --conf spark.jars.ivy=/tmp/.ivy2
+      --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,org.postgresql:postgresql:42.6.0
+      /app/process_orders.py
+    networks:
+      - flink-network
+    depends_on:
       kafka:
         condition: service_healthy
       postgres:
