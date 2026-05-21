@@ -4,3 +4,4 @@
 __pycache__/
 *.pyc
 .DS_Store
+/kafka-flink-project/spark/spark_checkpoints/
