@@ -43,6 +43,7 @@ kafka-flink-project/
 ### Step 1: Start Everything Automatically
 The included `start.sh` script handles JAR downloads, service orchestration, health checks, and topic creation.
 ```bash
+cd kafka-flink-project
 chmod +x start.sh
 ./start.sh
 ```
