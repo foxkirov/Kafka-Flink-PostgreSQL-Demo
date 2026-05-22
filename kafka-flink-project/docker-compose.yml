@@ -69,6 +69,27 @@ services:
       timeout: 5s
       retries: 5
 
+  # ClickHouse database
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123" # HTTP interface
+      - "9000:9000" # Native client interface
+    volumes:
+      - ./clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - clickhouse-data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_USER=my_custom_user
+      - CLICKHOUSE_PASSWORD=my_secure_password
+    networks:
+      - flink-network
+    healthcheck:
+      test: ["CMD", "bash", "-hc", "clickhouse client -q \'SELECT 1\'"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   # Flink JobManager
   jobmanager:
     image: flink:1.17.1-scala_2.12-java11
@@ -213,3 +234,4 @@ networks:
 volumes:
   postgres-data:
   flink-checkpoints:
+  clickhouse-data:

@@ -44,6 +44,13 @@ until docker-compose exec -T postgres pg_isready -U postgres > /dev/null 2>&1; d
 done
 echo "PostgreSQL is ready!"
 
+# Wait for ClickHouse
+echo "Waiting for ClickHouse..."
+until docker-compose exec -T clickhouse clickhouse client -q 'SELECT 1' > /dev/null 2>&1; do
+    sleep 2
+done
+echo "ClickHouse is ready!"
+
 echo ""
 echo "Step 4: Creating Kafka topic..."
 docker-compose exec -T kafka kafka-topics --create \
@@ -61,6 +68,7 @@ echo "Flink Web UI:      http://localhost:8081"
 echo "Kafka UI:          http://localhost:8080"
 echo "Kafka:             localhost:9092"
 echo "PostgreSQL:        localhost:5432 (password: postgres)"
+echo "ClickHouse:        localhost:8123 (HTTP), localhost:9000 (Native)"
 echo ""
 echo "To start the Flink job:"
 echo "  docker-compose exec jobmanager flink run -py /opt/flink/usrlib/process_orders_table.py -d"
